@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<Configuration>
+    <Properties>
+        <Property name="log-path">C:\logs\</Property>
+<!--    <Property name="log-path">/home/badi1991/logs/</Property>-->
+    </Properties>
+    <Appenders>
+        <RollingFile name="RollingFile" fileName="${log-path}/ScaleImage.log" filePattern="${log-path}/ScaleImage-%d{yyyy-MM-dd}-%i.log" >
+            <PatternLayout>
+                <pattern>%d{dd/MMM/yyyy HH:mm:ss:SSS}- %c{5}:%m%rEx%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="1 mb" />
+            </Policies>
+            <DefaultRolloverStrategy max="4"/>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Logger name="root" level="All" additivity="false">
+            <appender-ref ref="RollingFile" level="debug"/>
+        </Logger>
+        <Root level="All" additivity="false">
+            <AppenderRef ref="RollingFile"/>
+        </Root>
+    </Loggers>
+</Configuration>
