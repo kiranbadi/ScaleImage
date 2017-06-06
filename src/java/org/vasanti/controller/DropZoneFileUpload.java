@@ -6,7 +6,12 @@
 package org.vasanti.controller;
 
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.List;
@@ -37,11 +42,12 @@ import org.vasanti.model.bnimagesbn;
 public class DropZoneFileUpload extends HttpServlet {
 
     private static final Logger logger = LogManager.getLogger(DropZoneFileUpload.class.getName());
+    private static final long serialVersionUID = -5760835390791686979L;
     private File ImagefileUploadPath;
     private File ThumbnailFileUploadPath;
-    private static final long serialVersionUID = 1L;
 
-
+    boolean status = false;
+    int count = 0;
 
     /**
      * @param request
@@ -147,8 +153,10 @@ public class DropZoneFileUpload extends HttpServlet {
      */
     @SuppressWarnings("unchecked")
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         PrintWriter writer = response.getWriter();
+
         String path = "";
         if (!ServletFileUpload.isMultipartContent(request)) {
             throw new IllegalArgumentException("Request is not multipart, please 'multipart/form-data' enctype for your form.");
@@ -175,9 +183,9 @@ public class DropZoneFileUpload extends HttpServlet {
                     String ImageName = "";
                     String name = item.getName();
                     String contentType = item.getContentType();
-                    logger.info("Content Type  of file is", contentType);
+                    logger.info("Content Type  of file is " + contentType);
                     long size = item.getSize();
-                    logger.info("Size of file is", size);
+                    logger.info("Size of file is " + size);
                     String filetype = name.substring(name.lastIndexOf("."));
                     SecureRandom prng = SecureRandom.getInstance("SHA1PRNG");
                     String randomNum = Integer.toString(prng.nextInt());
@@ -216,7 +224,8 @@ public class DropZoneFileUpload extends HttpServlet {
 //                    jsono.put("delete_url", "UploadServlet?delfile=" + ImageName);
 //                    jsono.put("delete_type", "GET");                    
                     InsertImageInterface insert = new InsertImageInterface();
-                    insert.InsertImage(images);
+                    count = insert.InsertImage(images);
+                    files.put("status", status);
                     logger.info(files.toString());
                 }
             }
@@ -225,8 +234,13 @@ public class DropZoneFileUpload extends HttpServlet {
         } catch (Exception ex) {
             logger.error("Got the Exception", ex);
         } finally {
-            writer.write(files.toString());
-            writer.close();
+            try {
+                files.put("status", status);
+                writer.write(files.toString());
+                writer.close();
+            } catch (JSONException ex) {
+                logger.error("Got the JSONException", ex);
+            }
         }
 
     }
@@ -279,7 +293,6 @@ public class DropZoneFileUpload extends HttpServlet {
         return result.toString();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PrintWriter writer = response.getWriter();
@@ -296,19 +309,18 @@ public class DropZoneFileUpload extends HttpServlet {
                 images.setCOLPOSTID(COLPOSTID);
                 logger.info("COLPOSTID from View for delete is = " + COLPOSTID);
             } else if (COLPOSTID == null) {
-                RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/adultservices/error-page.jsp");
-                rd.forward(request, response);
+                try {
+                    files.put("error", "Listing Id is null");
+                    files.put("status", false);
+                    writer.write(files.toString());
+                    writer.close();
+                } catch (JSONException ex) {
+                    logger.error("Logging JSONException ", ex);
+                }
             }
             if (delfile != null) {
                 images.setCOLIMAGENAME(delfile);
                 logger.info("Imagename for delete from View is = " + delfile);
-                //  saveadultf sf = new saveadultf();
-                try {
-                    ///    sf.DeleteImage(images);
-                } catch (Exception ex) {
-                    logger.error("Failed to delete image data in DB ", ex);
-
-                }
                 if (file.exists()) {
                     try {
                         file.delete();
@@ -326,8 +338,15 @@ public class DropZoneFileUpload extends HttpServlet {
                     }
                 }
             } else if (delfile == null) {
-                RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/adultservices/error-page.jsp");
-                rd.forward(request, response);
+                try {
+                    files.put("error", "Listing Id is null");
+                    files.put("status", false);
+                    writer.write(files.toString());
+                    writer.close();
+                } catch (JSONException ex) {
+                    logger.error("Logging JSONException ", ex);
+                }
+
             }
 
         }

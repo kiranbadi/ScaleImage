@@ -10,24 +10,36 @@ package org.vasanti.model;
  * @author Kiran
  */
 public class bnimagesbn {
-    private int ID;
+
+    @Override
+    public String toString() {
+        return "bnimagesbn{COLPOSTID=" + COLPOSTID + ", COLIMAGENAME=" + COLIMAGENAME + ", COLTHUMBNAILNAME=" + COLTHUMBNAILNAME + '}';
+    }
+   
+ 
+
     private String COLPOSTID;
     private String COLIMAGENAME;
     private String COLTHUMBNAILNAME;
 
-    /**
-     * @return the ID
-     */
-    public int getID() {
-        return ID;
+    public String getImagepath() {
+        return imagepath;
     }
 
-    /**
-     * @param ID the ID to set
-     */
-    public void setID(int ID) {
-        this.ID = ID;
+    public void setImagepath(String imagepath) {
+        this.imagepath = imagepath;
     }
+
+    public String getThumbnailpath() {
+        return thumbnailpath;
+    }
+
+    public void setThumbnailpath(String thumbnailpath) {
+        this.thumbnailpath = thumbnailpath;
+    }
+    private String imagepath;
+    private String thumbnailpath;
+
 
     /**
      * @return the COLPOSTID

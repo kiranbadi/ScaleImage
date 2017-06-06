@@ -5,6 +5,7 @@
  */
 package org.vasanti.dao;
 
+import java.util.List;
 import org.vasanti.model.bnimagesbn;
 
 /**
@@ -12,6 +13,12 @@ import org.vasanti.model.bnimagesbn;
  * @author Kiran
  */
 public interface InsertImageDAO {
-    void InsertImage(bnimagesbn images);
-    void DeleteImage(bnimagesbn images);
+
+    int InsertImage(bnimagesbn images);
+
+    int DeleteImage(bnimagesbn images);
+
+    int GetImagesCount(String postid);
+
+    List<bnimagesbn> GetAllImages(String postid);
 }

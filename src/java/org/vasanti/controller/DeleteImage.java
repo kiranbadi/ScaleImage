@@ -8,7 +8,6 @@ package org.vasanti.controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -30,12 +29,13 @@ import org.vasanti.model.bnimagesbn;
 public class DeleteImage extends HttpServlet {
 
     private static final Logger logger = LogManager.getLogger(DeleteImage.class.getName());
+    private static final long serialVersionUID = -7942723764413327509L;
     private File ImagefileUploadPath;
     private File ThumbnailFileUploadPath;
     boolean imagefileStatus;
     boolean thumbfileStatus;
-
- 
+    int count = 0;
+    boolean status = false;
 
     @Override
     public void init(ServletConfig config) {
@@ -62,6 +62,7 @@ public class DeleteImage extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String path = "";
+        Boolean status = false;
         try (PrintWriter writer = response.getWriter()) {
             if (request.getParameter("delfile") != null && !request.getParameter("delfile").isEmpty()) {
                 bnimagesbn images = new bnimagesbn();
@@ -80,17 +81,19 @@ public class DeleteImage extends HttpServlet {
                     logger.info("Path CanonicalPath is " + path);
                     if (file.exists() && Thumbfile.exists()) {
                         try {
-                            try {
-                                imagefileStatus = file.delete();
-                                thumbfileStatus = Thumbfile.delete();
-                            } catch (Exception ex) {
-                                logger.error("Logging IO Exception", ex);
-                            }
+                            imagefileStatus = file.delete();
+                            thumbfileStatus = Thumbfile.delete();
                             files.put("name", delfile);
                             files.put("imagestatus", imagefileStatus);
-                            files.put("thumbstatus",thumbfileStatus);
+                            files.put("thumbstatus", thumbfileStatus);
                             InsertImageInterface delete = new InsertImageInterface();
-                            delete.DeleteImage(images);
+                            count = delete.DeleteImage(images);
+                            if(count >= 0){
+                                status = true;
+                                files.put("count",count);
+                                files.put("status", status);
+                            }
+                            
                             logger.info(files.toString());
                             writer.write(files.toString());
                             writer.close();
@@ -100,15 +103,26 @@ public class DeleteImage extends HttpServlet {
                             writer.write(files.toString());
                             writer.close();
                         }
+                    } else {
+                        files.put("count",count);
+                        files.put("name", delfile);
+                        files.put("imagestatus", false);
+                        files.put("thumbstatus", false);
+                        files.put("status", status);
+                        logger.info(files.toString());
+                        writer.write(files.toString());
+                        writer.close();
                     }
                 } else if (COLPOSTID == null || delfile == null) {
-                    RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/adultservices/error-page.jsp");
-                    rd.forward(request, response);
-                } else {
-                    logger.info("Outside the loop");
+                    files.put("Message", "Id or Image was null");
+                    files.put("status", status);
+                    writer.write(files.toString());
+                    writer.close();
                 }
 
             }
+        } catch (JSONException ex) {
+            logger.error("Failed to delete image and add image name to json map", ex);
         }
 
     }
@@ -142,6 +156,21 @@ public class DeleteImage extends HttpServlet {
             throws ServletException, IOException {
         processRequest(request, response);
     }
+    
+    
+     /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
 
     /**
      * Returns a short description of the servlet.
@@ -150,7 +179,7 @@ public class DeleteImage extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Servlet to delete images from the server";
+        return "Servlet to delete images from the server and get the count of images from database for postid ";
     }// </editor-fold>
 
 }

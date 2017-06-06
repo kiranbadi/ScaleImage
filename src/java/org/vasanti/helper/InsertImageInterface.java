@@ -5,6 +5,8 @@
  */
 package org.vasanti.helper;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.vasanti.dao.ImageDAOFactory;
 import org.vasanti.dao.InsertImageDAO;
 import org.vasanti.model.bnimagesbn;
@@ -14,23 +16,44 @@ import org.vasanti.model.bnimagesbn;
  * @author Kiran
  */
 public class InsertImageInterface {
-    
-    public void InsertImage(bnimagesbn images) {
+
+    public int InsertImage(bnimagesbn images) {
         InsertImageDAO imgdao = ImageDAOFactory.InsertImage();
+        int count = 0;
         try {
-            imgdao.InsertImage(images);
-        }catch (Exception ex){
+            count = imgdao.InsertImage(images);
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
+        return count;
     }
-    
-    public void DeleteImage(bnimagesbn images) {
+
+    public int DeleteImage(bnimagesbn images) {
+        int count = 0;
         InsertImageDAO imgdao = ImageDAOFactory.DeleteImage();
         try {
-            imgdao.DeleteImage(images);
-        }catch (Exception ex){
+            count = imgdao.DeleteImage(images);
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
+        return count;
     }
-    
+
+    public int GetImagesCount(String postid) {
+        int count = 0;
+        InsertImageDAO imgcount = ImageDAOFactory.GetImagesCount(postid);
+        count = imgcount.GetImagesCount(postid);
+        return count;
+    }
+
+    public List<bnimagesbn> GetAllImages(String postid) {
+        ArrayList<bnimagesbn> images = new ArrayList<>();
+        InsertImageDAO getallimages = ImageDAOFactory.GetAllImages(postid);
+        try {
+            images = (ArrayList<bnimagesbn>) getallimages.GetAllImages(postid);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return images;
+    }
 }

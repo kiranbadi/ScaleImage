@@ -17,6 +17,24 @@
 
         <link rel="stylesheet" type="text/css" href="css/dropzone.css">
 
+        <style type="text/css">
+            .block{
+                font-size:16px;
+                color:red;
+                margin-bottom:3px;
+                font-weight:bold;
+                letter-spacing:1px;
+            }
+            .jumbotron{
+                padding: 30px;
+                margin-bottom: 30px;
+                font-size: 21px;
+                font-weight: 200;
+                line-height: 2.1428571435;
+                color: inherit;
+                background-color:transparent;
+            }
+        </style>
 
 
 
@@ -29,16 +47,32 @@
     </head>
     <body style="padding:10px;">
         <div class="container-fluid">
-            <div class="jumbotron" style="height:300px;overflow:auto;">
-                <form action="DropZoneFileUpload" method="post" enctype="multipart/form-data" class="dropzone" id="mydropzone" style="border-radius:10px;">
-                    <input type="hidden" id="id-colpostid" value="ABCD" name="COLPOSTID">
+
+            <!-- Start of dropzone attached with form-->
+            <div class="jumbotron" style="height:300px;overflow:auto;background-color:none;">
+                <h4 class="text-center" id="id-image-count"></h4>
+                <form action="ImageUploader" method="post" enctype="multipart/form-data" class="dropzone" id="id-image-upload" style="border-radius:10px;">
+                    <input type="hidden" id="id-colpostid" value="" name="COLPOSTID">
                     <div class="fallback">
                         <input name="file" type="file" multiple />
                     </div>
                 </form>
             </div>
-            
-         
+            <!-- End of dropzone attached with form-->
+
+            <!-- Start of dropzone attached with div-->
+            <!--            <div class="jumbotron" style="height:300px;overflow:auto;">
+                            <div id="id-image-upload" class="dropzone">
+                                <input type="hidden" id="id-colpostid" value="ABCD" name="COLPOSTID">
+                                <div class="fallback">
+                                    <input name="file" type="file" multiple />
+                                </div>
+                            </div>
+                        </div>-->
+
+            <!--End of dropzone attached with div-->
+
+
 
         </div>
 
@@ -48,20 +82,11 @@
         <!--<script src="../js/app/UpoadMedia.js"></script>-->
         <!-- Include all compiled plugins (below), or include individual files as needed --> 
         <script src="js/bootstrap.min.js"></script>
-        <script src="js/dropzone.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/dropzone.js"></script>
+        <!--        <script src="js/dropzone.js"></script>-->
+        <script src="js/app/dzImpl.js" type="text/javascript"></script>
         <script type="text/javascript">
-            $(function () {
-                var myDropzone = new Dropzone("#mydropzone", {
-                    addRemoveLinks: true
-                });
-                myDropzone.on("removedfile", function (file) {
-                    console.log("Delete file name is " + file.filename);
-                });
-                myDropzone.on("success", function (file, response) {
-                    console.log(response.name);
-                    file.filename = response.name;                    
-                });
-            });
+
         </script>
     </body>
 </html>

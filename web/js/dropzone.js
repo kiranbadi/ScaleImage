@@ -318,6 +318,7 @@
             },
             removedfile: function (file) {
                 var name = file.filename;
+                console.log("deleted file name " + name);
                 var COLPOSTID = $("#id-colpostid").val();
                 $.ajax({
                     type: 'GET',
@@ -341,6 +342,8 @@
                 }
                 return this._updateMaxFilesReachedClass();
             },
+            
+            
             thumbnail: function (file, dataUrl) {
                 var thumbnailElement, _i, _len, _ref;
                 if (file.previewElement) {
