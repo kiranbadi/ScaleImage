@@ -5,6 +5,8 @@
  */
 package org.vasanti.dao;
 
+import org.vasanti.model.bnawsbn;
+
 /**
  *
  * @author Kiran
@@ -22,7 +24,12 @@ public class ImageDAOFactory {
     public static InsertImageDAO GetImagesCount(String postid) {
         return new InsertImageDAOImpl();
     }
-     public static InsertImageDAO GetAllImages(String postid) {
+
+    public static InsertImageDAO GetAllImages(String postid) {
+        return new InsertImageDAOImpl();
+    }
+
+    public static InsertImageDAO InsertAWSForm(bnawsbn aws) {
         return new InsertImageDAOImpl();
     }
 }

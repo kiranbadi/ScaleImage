@@ -45,7 +45,7 @@ $(document).ready(function () {
             COLPOSTID: colpostid
         },
         maxFilesize: 15.0,
-        maxFiles: 2,
+        maxFiles: 30,
         autoProcessQueue: true,
         acceptedFiles: "image/*",
         dictInvalidFileType: "Image Type is Invalid !!",

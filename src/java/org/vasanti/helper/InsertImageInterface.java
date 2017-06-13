@@ -7,8 +7,11 @@ package org.vasanti.helper;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.vasanti.dao.ImageDAOFactory;
 import org.vasanti.dao.InsertImageDAO;
+import org.vasanti.model.bnawsbn;
 import org.vasanti.model.bnimagesbn;
 
 /**
@@ -17,13 +20,15 @@ import org.vasanti.model.bnimagesbn;
  */
 public class InsertImageInterface {
 
+    static final Logger logger = LogManager.getLogger(InsertImageInterface.class.getName());
+
     public int InsertImage(bnimagesbn images) {
         InsertImageDAO imgdao = ImageDAOFactory.InsertImage();
         int count = 0;
         try {
             count = imgdao.InsertImage(images);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error("Logging Exception ", ex);
         }
         return count;
     }
@@ -34,7 +39,7 @@ public class InsertImageInterface {
         try {
             count = imgdao.DeleteImage(images);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error("Logging Exception ", ex);
         }
         return count;
     }
@@ -52,8 +57,15 @@ public class InsertImageInterface {
         try {
             images = (ArrayList<bnimagesbn>) getallimages.GetAllImages(postid);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error("Logging Exception ", ex);
         }
         return images;
+    }
+
+    public boolean InsertAWSForm(bnawsbn aws) {
+        boolean status = false;
+        InsertImageDAO awsdao = ImageDAOFactory.InsertAWSForm(aws);
+        status = awsdao.InsertAWSForm(aws);
+        return status;
     }
 }

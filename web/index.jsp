@@ -47,7 +47,8 @@
     </head>
     <body style="padding:10px;">
         <div class="container-fluid">
-
+            
+            <h3 class="text-center"><a href="HelperServlet?q=aws">AWS Form</a> && <a href="HelperServlet?q=upload">BlueImp Jquery Upload</a></h3>
             <!-- Start of dropzone attached with form-->
             <div class="jumbotron" style="height:300px;overflow:auto;background-color:none;">
                 <h4 class="text-center" id="id-image-count"></h4>

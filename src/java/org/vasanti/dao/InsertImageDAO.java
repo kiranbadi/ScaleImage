@@ -6,6 +6,7 @@
 package org.vasanti.dao;
 
 import java.util.List;
+import org.vasanti.model.bnawsbn;
 import org.vasanti.model.bnimagesbn;
 
 /**
@@ -21,4 +22,6 @@ public interface InsertImageDAO {
     int GetImagesCount(String postid);
 
     List<bnimagesbn> GetAllImages(String postid);
+    
+    boolean InsertAWSForm(bnawsbn aws);
 }
